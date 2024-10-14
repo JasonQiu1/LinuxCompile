@@ -108,7 +108,7 @@ export MAKEOPTS="-j $CORE_COUNT"
 export TMP="$WORK"
 export TEMP="$WORK"
 export TMPDIR="$WORK"
-export PYTHON_CMD="python3.10"
+export PYTHON_CMD="python3.8"
 #export PYTHON_CMD="python3"
 
 unset CC CXX
@@ -220,6 +220,9 @@ if [[ $STAGE && $STAGE < $NEXT ]] ; then
 
 	echo " * Patching Boost Python support"
 	patch libs/python/src/exec.cpp $DIST/boost.python-1.72.0.patch
+
+    echo " * Patching glibc support"
+    sed -e "s/#if PTHREAD_STACK_MIN > 0/#ifdef PTHREAD_STACK_MIN/" -i ./boost/thread/pthread/thread_data.hpp
 
 	PYVER=`${PYTHON_CMD} --version 2>&1 | cut -d' ' -f2 | cut -d '.' -f'1 2'`
 	TOOLSET=`if [[ $CLANG ]] ; then echo clang ; else echo gcc ; fi`
@@ -367,6 +370,8 @@ if [[ $STAGE && $STAGE < $NEXT ]] ; then
 		exit 1
 	fi
 	sleep $PAUSE
+    echo "Patching openexr file due to missing std::numeric_limits import..."
+    sed -i '38i #include <limits>' ./IlmImf/ImfTiledMisc.cpp
 	if make $MAKEOPTS && make install ; then
 		echo " * openexr compiled and installed successfully"
 	else
@@ -537,12 +542,17 @@ if [[ $STAGE && $STAGE < $NEXT ]] ; then
 			-D LUXRAYS_CUSTOM_CONFIG=cmake/SpecializedConfig/Config_Linux-Static.cmake \
 			-D PYTHON_LIBRARY:FILEPATH="$PYTHON_LIB" \
 			-D PYTHON_INCLUDE_DIR:PATH="$PYTHON_INCLUDE" \
-			-D PYTHON_INCLUDE_DIRS:PATH="$PYTHON_INCLUDE" . ; then
+			-D PYTHON_INCLUDE_DIRS:PATH="$PYTHON_INCLUDE" \
+			-D EMBREE_SEARCH_PATH:PATH="$TARGET" \
+			-D OIDN_SEARCH_PATH:PATH="$TARGET" \
+			-D TBB_SEARCH_PATH:PATH="$TARGET" \
+			-D BOOST_SEARCH_PATH:PATH="$TARGET" . ; then
 		echo " !!! $LUXCORE_TARGET configuration failed"
 		exit 1
 	fi
 	sleep $PAUSE
 	echo " * Compiling $LUXCORE_TARGET"
+	cd ../LuxCoreBuild
 	if cmake --build . -- $MAKEOPTS ; then
             echo " * $LUXCORE_TARGET compiled successfully"
 	else
