@@ -1,7 +1,6 @@
 #!/bin/bash
 
-function begin_stage() {
-	local stage_name=$1
+function begin_stage() { local stage_name=$1
 	local distfile_mask=$2
 
 	echo -ne "\033]0;${stage_name} stage\007"
@@ -62,6 +61,7 @@ if [[ ! ${8} ]] ; then
 	exit 1
 fi
 
+BUILD="${10}"
 STAGE=$9
 ROOT="$1"
 TARGET="$2"
@@ -538,7 +538,8 @@ if [[ $STAGE && $STAGE < $NEXT ]] ; then
 	cd $ROOT/$LUX_TAG
 
 	echo " * Configuring $LUXCORE_TARGET"
-	if ! cmake -G "Unix Makefiles" $BUILD_LUXCORE_DLL -Wno-dev \
+	if ! cmake -S . -B $ROOT/$BUILD \
+            -G "Unix Makefiles" $BUILD_LUXCORE_DLL -Wno-dev \
 			-D LUXRAYS_CUSTOM_CONFIG=cmake/SpecializedConfig/Config_Linux-Static.cmake \
 			-D PYTHON_LIBRARY:FILEPATH="$PYTHON_LIB" \
 			-D PYTHON_INCLUDE_DIR:PATH="$PYTHON_INCLUDE" \
@@ -552,14 +553,15 @@ if [[ $STAGE && $STAGE < $NEXT ]] ; then
 	fi
 	sleep $PAUSE
 	echo " * Compiling $LUXCORE_TARGET"
-	cd ../LuxCoreBuild
-	if cmake --build . -- $MAKEOPTS ; then
+
+	if cmake --build $ROOT/$BUILD -- $MAKEOPTS ; then
             echo " * $LUXCORE_TARGET compiled successfully"
 	else
             echo " !!! $LUXCORE_TARGET compilation failed"
             exit 1
 	fi
 
+    cd $ROOT/$BUILD
     mkdir ${TARGET}/$LUX_TAG 2>/dev/null
 	if echo $LUX_TAG | grep -iq 'pyluxcore' ; then
 	    cp -vf lib/*.so ${TARGET}/$LUX_TAG

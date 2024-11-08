@@ -22,6 +22,7 @@ else
 fi
 
 LUX_TAG="${1%/}"
+BUILD="$LUX_TAG-build"
 STAGE=$2
 
 GENERIC_FLAGS="-w -mtune=generic -mno-ssse3 -mmmx -msse -msse2 -O2 -pipe -mfpmath=sse -fPIC"
@@ -36,12 +37,16 @@ LUXCORE_FLAGS="-std=c++11 -mtune=generic -mno-ssse3 -static-libgcc -mmmx -msse -
           -DHAVE_PTHREAD_H -fPIC -fno-stack-protector"
 CHOST="x86_64-pc-linux-gnu"
 
+if [ ! -d "$BUILD" ]; then
+    mkdir -p $BUILD
+fi
+
 if ! $ROOT/build "$ROOT" "$TARGET" "$WORK" "$DIST" "$LUX_TAG" "$GENERIC_FLAGS" \
-"$LUX_FLAGS" "$CHOST" $STAGE ; then
+"$LUX_FLAGS" "$CHOST" $STAGE "$BUILD"; then
     exit 1
 fi
 
-if ! $ROOT/utils/install "$TARGET" "$LUX_TAG" "$DIST"; then
+if ! $ROOT/utils/install "$TARGET" "$LUX_TAG" "$DIST" "$BUILD"; then
     echo " * Installation FAILED"
 else
     echo " * Installed successfully to $TARGET/$LUX_TAG"

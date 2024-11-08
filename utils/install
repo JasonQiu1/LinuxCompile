@@ -8,6 +8,7 @@ fi
 TARGET=$1
 LUX_TAG=$2
 DIST=$3
+BUILD=$4
 
 # Check if I have to build the stand alone version or the SDK version
 if echo $LUX_TAG | grep -iq 'sdk' ; then
@@ -18,18 +19,18 @@ if echo $LUX_TAG | grep -iq 'sdk' ; then
 	mkdir $TARGET/$LUX_TAG
 
 	mkdir $TARGET/$LUX_TAG/bin
-	cp $LUX_TAG/bin/luxcoreui $LUX_TAG/bin/luxcoreconsole $LUX_TAG/bin/luxcoredemo \
+	cp $BUILD/bin/luxcoreui $LUX_TAG/bin/luxcoreconsole $LUX_TAG/bin/luxcoredemo \
 		$LUX_TAG/bin/luxcorescenedemo $TARGET/$LUX_TAG/bin
 
 	mkdir $TARGET/$LUX_TAG/lib
-	cp $LUX_TAG/lib/*.so $TARGET/$LUX_TAG/lib
+	cp $BUILD/lib/*.so $TARGET/$LUX_TAG/lib
 	cp $TARGET/lib/libOpenImageDenoise.so.1 $TARGET/lib/libembree3.so.3 $TARGET/lib/libtbb.so.12 $TARGET/lib/libtbb.so.2 $TARGET/$LUX_TAG/lib
  	cp -a $TARGET/lib/libnvrtc* $TARGET/$LUX_TAG
 
-	cp $LUX_TAG/README.md $TARGET/$LUX_TAG
-	cp $LUX_TAG/COPYING.txt $TARGET/$LUX_TAG
-	cp $LUX_TAG/AUTHORS.txt $TARGET/$LUX_TAG
-	cp $LUX_TAG/sdk/CMakeLists.txt $TARGET/$LUX_TAG
+	cp $BUILD/README.md $TARGET/$LUX_TAG
+	cp $BUILD/COPYING.txt $TARGET/$LUX_TAG
+	cp $BUILD/AUTHORS.txt $TARGET/$LUX_TAG
+	cp $BUILD/sdk/CMakeLists.txt $TARGET/$LUX_TAG
 
 	mkdir $TARGET/$LUX_TAG/cmake
 
@@ -37,13 +38,13 @@ if echo $LUX_TAG | grep -iq 'sdk' ; then
 	mkdir $TARGET/$LUX_TAG/include/luxrays
 	mkdir $TARGET/$LUX_TAG/include/luxrays/utils
 	cp -r $LUX_TAG/include/luxrays/utils/cyhair $TARGET/$LUX_TAG/include/luxrays/utils
-	cp $LUX_TAG/include/luxrays/utils/exportdefs.h $TARGET/$LUX_TAG/include/luxrays/utils
-	cp $LUX_TAG/include/luxrays/utils/properties.h $TARGET/$LUX_TAG/include/luxrays/utils
-	cp $LUX_TAG/include/luxrays/utils/utils.h $TARGET/$LUX_TAG/include/luxrays/utils
+	cp $BUILD/include/luxrays/utils/exportdefs.h $TARGET/$LUX_TAG/include/luxrays/utils
+	cp $BUILD/include/luxrays/utils/properties.h $TARGET/$LUX_TAG/include/luxrays/utils
+	cp $BUILD/include/luxrays/utils/utils.h $TARGET/$LUX_TAG/include/luxrays/utils
 
 	mkdir $TARGET/$LUX_TAG/include/luxcore
-	cp $LUX_TAG/generated/include/luxcore/cfg.h $TARGET/$LUX_TAG/include/luxcore
-	cp $LUX_TAG/include/luxcore/luxcore.h $TARGET/$LUX_TAG/include/luxcore
+	cp $BUILD/generated/include/luxcore/cfg.h $TARGET/$LUX_TAG/include/luxcore
+	cp $BUILD/include/luxcore/luxcore.h $TARGET/$LUX_TAG/include/luxcore
 
 	cp -r $LUX_TAG/samples $TARGET/$LUX_TAG
 	cp -r $LUX_TAG/scenes $TARGET/$LUX_TAG
@@ -67,25 +68,25 @@ else
 #	pyinstaller samples/pyluxcoretool/pyluxcoretool.linux.spec
 #	cd -
 #
-#	cp $LUX_TAG/bin/luxcoreui $LUX_TAG/dist/pyluxcoretool $TARGET/$LUX_TAG
+#	cp $BUILD/bin/luxcoreui $LUX_TAG/dist/pyluxcoretool $TARGET/$LUX_TAG
 	# Workaround to PyInstaller, just run "python3 pyluxcoretools.zip"
-	cp $LUX_TAG/lib/pyluxcoretools.zip $TARGET/$LUX_TAG
+	cp $BUILD/lib/pyluxcoretools.zip $TARGET/$LUX_TAG
 
-	cp $LUX_TAG/bin/luxcoreui $TARGET/$LUX_TAG
-	cp $LUX_TAG/lib/*.so $TARGET/$LUX_TAG
+	cp $BUILD/bin/luxcoreui $TARGET/$LUX_TAG
+	cp $BUILD/lib/*.so $TARGET/$LUX_TAG
 	cp $TARGET/lib/libOpenImageDenoise.so.1 $TARGET/lib/libembree3.so.3 $TARGET/lib/libtbb.so.12 $TARGET/lib/libtbb.so.2 $TARGET/$LUX_TAG
  	cp -a $TARGET/lib/libnvrtc* $TARGET/$LUX_TAG
 
-	cp $LUX_TAG/README.md $TARGET/$LUX_TAG
-	cp $LUX_TAG/COPYING.txt $TARGET/$LUX_TAG
-	cp $LUX_TAG/AUTHORS.txt $TARGET/$LUX_TAG
+	cp $BUILD/README.md $TARGET/$LUX_TAG
+	cp $BUILD/COPYING.txt $TARGET/$LUX_TAG
+	cp $BUILD/AUTHORS.txt $TARGET/$LUX_TAG
 	mkdir -p $TARGET/$LUX_TAG/scenes/cornell
-	cp $LUX_TAG/scenes/cornell/cornell.cfg $TARGET/$LUX_TAG/scenes/cornell
-	cp $LUX_TAG/scenes/cornell/cornell.scn $TARGET/$LUX_TAG/scenes/cornell
-	cp $LUX_TAG/scenes/cornell/Khaki.ply $TARGET/$LUX_TAG/scenes/cornell
-	cp $LUX_TAG/scenes/cornell/HalveRed.ply $TARGET/$LUX_TAG/scenes/cornell
-	cp $LUX_TAG/scenes/cornell/DarkGreen.ply $TARGET/$LUX_TAG/scenes/cornell
-	cp $LUX_TAG/scenes/cornell/Grey.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $BUILD/scenes/cornell/cornell.cfg $TARGET/$LUX_TAG/scenes/cornell
+	cp $BUILD/scenes/cornell/cornell.scn $TARGET/$LUX_TAG/scenes/cornell
+	cp $BUILD/scenes/cornell/Khaki.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $BUILD/scenes/cornell/HalveRed.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $BUILD/scenes/cornell/DarkGreen.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $BUILD/scenes/cornell/Grey.ply $TARGET/$LUX_TAG/scenes/cornell
 
 	cd $TARGET
 	tar -cvjf ${LUX_TAG}.tar.bz2 $LUX_TAG
@@ -103,7 +104,7 @@ if [[ -d "LuxMark" ]] ; then
 	mkdir $TARGET/luxmark
 	mkdir $TARGET/luxmark/lib
 
-	cp $LUX_TAG/bin/luxcoreui $TARGET/luxmark
+	cp $BUILD/bin/luxcoreui $TARGET/luxmark
 	cp $TARGET/lib/libOpenImageDenoise.so.1 $TARGET/lib/libembree3.so.3 $TARGET/lib/libtbb.so.12 $TARGET/lib/libtbb.so.2 $TARGET/luxmark/lib
 	#cp $TARGET/qt5-v5.12.2/lib/libQt5Widgets.so $TARGET/luxmark/libQt5Widgets.so.5
 	#cp $TARGET/qt5-v5.12.2/lib/libQt5Network.so $TARGET/luxmark/libQt5Network.so.5
