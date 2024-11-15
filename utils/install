@@ -12,25 +12,24 @@ BUILD=$4
 
 # Check if I have to build the stand alone version or the SDK version
 if echo $LUX_TAG | grep -iq 'sdk' ; then
-	echo
 	echo " * Installing SDK version at $TARGET/$LUX_TAG"
 
 	rm -rf $TARGET/$LUX_TAG
 	mkdir $TARGET/$LUX_TAG
 
 	mkdir $TARGET/$LUX_TAG/bin
-	cp $BUILD/bin/luxcoreui $LUX_TAG/bin/luxcoreconsole $LUX_TAG/bin/luxcoredemo \
-		$LUX_TAG/bin/luxcorescenedemo $TARGET/$LUX_TAG/bin
+	cp $BUILD/bin/luxcoreui $BUILD/bin/luxcoreconsole $BUILD/bin/luxcoredemo \
+		$BUILD/bin/luxcorescenedemo $TARGET/$LUX_TAG/bin
 
 	mkdir $TARGET/$LUX_TAG/lib
 	cp $BUILD/lib/*.so $TARGET/$LUX_TAG/lib
 	cp $TARGET/lib/libOpenImageDenoise.so.1 $TARGET/lib/libembree3.so.3 $TARGET/lib/libtbb.so.12 $TARGET/lib/libtbb.so.2 $TARGET/$LUX_TAG/lib
  	cp -a $TARGET/lib/libnvrtc* $TARGET/$LUX_TAG
 
-	cp $BUILD/README.md $TARGET/$LUX_TAG
-	cp $BUILD/COPYING.txt $TARGET/$LUX_TAG
-	cp $BUILD/AUTHORS.txt $TARGET/$LUX_TAG
-	cp $BUILD/sdk/CMakeLists.txt $TARGET/$LUX_TAG
+	cp $LUX_TAG/README.md $TARGET/$LUX_TAG
+	cp $LUX_TAG/COPYING.txt $TARGET/$LUX_TAG
+	cp $LUX_TAG/AUTHORS.txt $TARGET/$LUX_TAG
+	cp $LUX_TAG/sdk/CMakeLists.txt $TARGET/$LUX_TAG
 
 	mkdir $TARGET/$LUX_TAG/cmake
 
@@ -77,16 +76,16 @@ else
 	cp $TARGET/lib/libOpenImageDenoise.so.1 $TARGET/lib/libembree3.so.3 $TARGET/lib/libtbb.so.12 $TARGET/lib/libtbb.so.2 $TARGET/$LUX_TAG
  	cp -a $TARGET/lib/libnvrtc* $TARGET/$LUX_TAG
 
-	cp $BUILD/README.md $TARGET/$LUX_TAG
-	cp $BUILD/COPYING.txt $TARGET/$LUX_TAG
-	cp $BUILD/AUTHORS.txt $TARGET/$LUX_TAG
+	cp $LUX_TAG/README.md $TARGET/$LUX_TAG
+	cp $LUX_TAG/COPYING.txt $TARGET/$LUX_TAG
+	cp $LUX_TAG/AUTHORS.txt $TARGET/$LUX_TAG
 	mkdir -p $TARGET/$LUX_TAG/scenes/cornell
-	cp $BUILD/scenes/cornell/cornell.cfg $TARGET/$LUX_TAG/scenes/cornell
-	cp $BUILD/scenes/cornell/cornell.scn $TARGET/$LUX_TAG/scenes/cornell
-	cp $BUILD/scenes/cornell/Khaki.ply $TARGET/$LUX_TAG/scenes/cornell
-	cp $BUILD/scenes/cornell/HalveRed.ply $TARGET/$LUX_TAG/scenes/cornell
-	cp $BUILD/scenes/cornell/DarkGreen.ply $TARGET/$LUX_TAG/scenes/cornell
-	cp $BUILD/scenes/cornell/Grey.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $TARGET/scenes/cornell/cornell.cfg $TARGET/$LUX_TAG/scenes/cornell
+	cp $TARGET/scenes/cornell/cornell.scn $TARGET/$LUX_TAG/scenes/cornell
+	cp $TARGET/scenes/cornell/Khaki.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $TARGET/scenes/cornell/HalveRed.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $TARGET/scenes/cornell/DarkGreen.ply $TARGET/$LUX_TAG/scenes/cornell
+	cp $TARGET/scenes/cornell/Grey.ply $TARGET/$LUX_TAG/scenes/cornell
 
 	cd $TARGET
 	tar -cvjf ${LUX_TAG}.tar.bz2 $LUX_TAG
